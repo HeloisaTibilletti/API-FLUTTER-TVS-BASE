@@ -129,4 +129,6 @@ describe("Teste da Rota atualizarProduto", () => {
     // Limpeza dos produtos criados
     await Produto.destroy({ where: { id: produtoId } });
   });
+
+  
 });

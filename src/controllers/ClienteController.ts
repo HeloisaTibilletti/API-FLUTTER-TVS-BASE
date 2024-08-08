@@ -8,10 +8,10 @@ export const listarClientes = async (req: Request, res: Response) => {
   try {
     const clientes = await Cliente.findAll();
 
-    if (clientes) {
-      res.json(clientes); // Cliente encontrado, retorne-o como resposta
+    if (clientes.length > 0) {
+      res.json(clientes); //
     } else {
-      res.status(404).json({ message: "Clientes não encontrados" }); // Cliente não encontrado
+      res.status(404).json({ message: "Nenhum cliente cadastrado!" });
     }
 
   } catch (error) {

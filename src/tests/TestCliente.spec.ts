@@ -67,19 +67,30 @@ describe("Teste da Rota GetClienteById", () => {
 });
 
 describe("Teste da Rota listarClientes", () => {
+
+  beforeAll(async () => {
+    // Limpa a tabela de clientes antes de executar os testes
+    await Cliente.destroy({ where: {} });
+  });
+
+  it("Deve retornar status 404 e mensagem apropriada quando não há clientes", async () => {
+    const response = await request(app).get("/clientes");
+
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty("message", "Nenhum cliente foi encontrado");
+  });
+
   it("Deve retornar uma lista de clientes", async () => {
+    // Adicione aqui um cliente para garantir que o próximo teste passe
+    await Cliente.create({ nome: "Cliente", sobrenome: "Teste", cpf: "12345678900" });
+
     const response = await request(app).get("/clientes");
 
     expect(response.status).toBe(200);
-    expect(response.body.clientes).toBeInstanceOf(Array);
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body.length).toBeGreaterThan(0);
   });
 
-  it('Deve retornar 404 se não houver clientes', async () => {
-    const response = await request(app).get('/clientes');
-
-    expect(response.status).toBe(404);
-    expect(response.body).toHaveProperty('message', 'Clientes não existem');
-  });
 
   it("Deve retornar a lista de clientes dentro de um tempo aceitavel", async () => {
     const start = Date.now();
