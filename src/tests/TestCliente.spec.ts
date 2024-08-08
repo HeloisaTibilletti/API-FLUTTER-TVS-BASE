@@ -74,6 +74,13 @@ describe("Teste da Rota listarClientes", () => {
     expect(response.body.clientes).toBeInstanceOf(Array);
   });
 
+  it('Deve retornar 404 se não houver clientes', async () => {
+    const response = await request(app).get('/clientes');
+
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('message', 'Clientes não existem');
+  });
+
   it("Deve retornar a lista de clientes dentro de um tempo aceitavel", async () => {
     const start = Date.now();
     const response = await request(app).get("/clientes");
@@ -82,6 +89,7 @@ describe("Teste da Rota listarClientes", () => {
     expect(response.status).toBe(200);
     expect(duration).toBeLessThan(100); // Verifica se a resposta é retornada em menos de 500ms
   });
+
 });
 
 describe("Teste da Rota excluirCliente", () => {
@@ -177,5 +185,7 @@ describe("Teste da Rota atualizarCliente", () => {
   afterAll(async () => {
     // Limpeza dos clientes criados
     await Cliente.destroy({ where: { id: [clienteId, clienteExistenteId] } });
-  });
-});
+  });  
+    });
+
+
