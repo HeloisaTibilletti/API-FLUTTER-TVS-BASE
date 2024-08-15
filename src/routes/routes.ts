@@ -5,6 +5,7 @@ import * as ClienteController from "../controllers/ClienteController";
 import * as ItemDoPedidoController from "../controllers/ItemDoPedidoController";
 import * as PedidoController from "../controllers/PedidoController";
 import * as ProdutoController from "../controllers/ProdutoController";
+import * as FuncionarioController from "../controllers/FuncionarioController";
 
 const router = Router();
 
@@ -35,5 +36,12 @@ router.get("/itensDoPedido/:id", ItemDoPedidoController.getItemDoPedidoById);
 router.post("/incluirItemDoPedido", ItemDoPedidoController.incluirItemDoPedido);
 router.put("/atualizarItemDoPedido/:id", ItemDoPedidoController.atualizarItemDoPedido);
 router.delete("/excluirItemDoPedido/:id", ItemDoPedidoController.excluirItemDoPedido);
+
+// FUNCIONARIO
+router.get("/funcionarios", FuncionarioController.listarFuncionarios); 
+router.get("/funcionarios/:idFuncionario", FuncionarioController.getFuncionarioById); 
+router.post("/incluirFuncionario", FuncionarioController.incluirFuncionario); 
+router.put("/atualizarFuncionario/:id", FuncionarioController.atualizarFuncionario); 
+router.delete("/excluirFuncionario/:id", FuncionarioController.excluirFuncionario); 
 
 export default router;

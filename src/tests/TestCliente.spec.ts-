@@ -2,7 +2,7 @@ const request = require("supertest");
 import * as server from "../server";
 import { app } from "../server"; // Certifique-se de que o caminho está correto
 import { Request, Response } from "express";
-import { Cliente } from "../models/Cliente";
+import { Cliente } from "./Cliente";
 
 describe("Teste da Rota incluirCliente", () => {
   let clienteId: number;
