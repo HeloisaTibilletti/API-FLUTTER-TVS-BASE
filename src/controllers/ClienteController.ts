@@ -4,6 +4,9 @@ import { Cliente } from "../models/Cliente";
 import { Pedido } from "../models/Pedido";
 import { Op } from "sequelize";
 
+const request = require("supertest");
+import { app } from "../server"; 
+
 export const listarClientes = async (req: Request, res: Response) => {
   try {
     const clientes = await Cliente.findAll();
@@ -115,3 +118,46 @@ export const incluirCliente = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Erro ao incluir cliente" });
   }
 };
+
+  describe("Teste de Integridade Relacional: Exclusão de Cliente com Pedidos Associados", () => {
+    let clienteId: number;
+    let pedidoId: number;
+
+    beforeAll(async () => {
+      // Cria um cliente e um pedido associado
+      const cliente = await Cliente.create({
+        nome: "Cliente Teste",
+        sobrenome: "Sobrenome Teste",
+        cpf: "12345678900"
+      });
+      clienteId = cliente.id;
+
+      const pedido = await Pedido.create({
+        data: "2024-08-01",
+        id_cliente: clienteId
+      });
+      pedidoId = pedido.id;
+    });
+
+    it("Deve falhar ao tentar excluir um cliente com pedidos associados", async () => {
+      const response = await request(app).delete(`/clientes/${clienteId}`);
+
+      expect(response.status).toBe(400); // Ou o status que você espera para a falha
+      expect(response.body).toHaveProperty("message", "Cliente possui pedidos associados e não pode ser excluído");
+
+      // Verifica se o cliente ainda está presente
+      const cliente = await Cliente.findByPk(clienteId);
+      expect(cliente).not.toBeNull();
+
+      // Verifica se o pedido ainda está presente
+      const pedido = await Pedido.findByPk(pedidoId);
+      expect(pedido).not.toBeNull();
+    });
+
+    afterAll(async () => {
+      // Limpeza após os testes
+      await Pedido.destroy({ where: { id: pedidoId } });
+      await Cliente.destroy({ where: { id: clienteId } });
+    });
+  });
+

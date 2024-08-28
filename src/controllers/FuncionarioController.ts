@@ -102,6 +102,8 @@ export const excluirFuncionario = async (req: Request, res: Response) => {
     }
   };
 
+  
+
 
   
 
